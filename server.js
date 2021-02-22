@@ -17,7 +17,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 
 // Cors
-if (process.env.LOCAL === true) app.use(cors());
+app.use(cors());
 
 // Routes
 const notes = require("./routes/notes");
