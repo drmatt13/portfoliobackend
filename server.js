@@ -4,7 +4,8 @@ const cors = require("cors");
 const app = express();
 
 // get global variables
-require('dotenv').config({ path: './config/config.env' });
+const dotenv = require('dotenv');
+dotenv.config({path: __dirname + '/config/config.env'});
 
 // Connect to DB
 const connectDB = require('./config/connectDB');
