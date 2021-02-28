@@ -44,48 +44,47 @@ exports.login = async (req, res, next) => {
 
   const {email, password} = req.body;
 
-  const user = await User.findOne({email});
+  if (!email || !password) return next(new Error('Please provide an email and password'));
+  try {
+    const user = await User.findOne({email}).select('+password');
+    if (!user) {
+      return next(new Error('Invalid credentials'));
+    }
+    const validation = await bcrypt.compare(password, user.password);
+    const token = jwt.sign({payload: user._id}, process.env.TOKEN_SECRET);
+    if (!validation) {
+      return next(new Error('incorrect password'));
+    }
 
-  bcrypt.compare(password, user.password, (error, same) => {
-    if (error) return res.json({ success: false });
-    if (same) {
-      const token = jwt.sign({payload: user._id}, process.env.TOKEN_SECRET);
-      return res.json({
-        success: true, 
-        bearer: token
-      });
-    } else return res.json({ success: false });
-  });
+    delete user.password;
+
+    console.log('Logged In:'.bgBlue.black, token);
+    
+    return res.json({
+      success: true, 
+      bearer: token,
+      user
+    });
+  } catch (error) {
+    return next(new Error('error'));
+  }
 }
 
-
 // @desc      Verify Token
-// @route     POST api/auth/verify
+// @route     GET api/auth/verify
 // @access    Public
 exports.verify = (req, res, next) => {
-  // console.log(req.body);
-  jwt.verify(req.body.bearer, process.env.TOKEN_SECRET, async (error, verifiedJwt) => {
+  const { bearer } = req.headers;
+  jwt.verify(bearer, process.env.TOKEN_SECRET, async (error, verifiedJwt) => {
     if(!error){
-      const user = await User.findById(verifiedJwt.payload).select('-password');
-      if (user) return res.json({ success: true, user });
+      const user = await User.findById(verifiedJwt.payload);
+      if (user) {
+        console.log('Token Verified:'.green, bearer );
+        return res.json({ success: true, user });
+      }
     } else {
       return res.json({ success: false});
     }
     return res.json({ success: false });
   });
 }
-
-// @desc      get User
-// @route     POST api/auth/verify
-// @access    Public
-// exports.verify = (req, res, next) => {
-//   jwt.verify(req.body.bearer, process.env.TOKEN_SECRET, async (error, verifiedJwt) => {
-//     if(!error){
-//       const user = await User.findById(verifiedJwt.payload);
-//       if (user) return res.json({ success: true });
-//     } else {
-//       return res.json({ success: false});
-//     }
-//     return res.json({ success: false });
-//   });
-// }

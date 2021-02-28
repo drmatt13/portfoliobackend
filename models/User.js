@@ -5,14 +5,12 @@ const Schema = new mongoose.Schema({
   firstName: {
     type: String,
     required: [true, 'Please add a first name'],
-    unique: true,
     trim: true,
     maxlength: [25, 'First name can not be more then 20 characters']
   },
   lastName: {
     type: String,
     required: [true, 'Please add a last name'],
-    unique: true,
     trim: true,
     maxlength: [25, 'Last name can not be more then 20 characters']
   },
@@ -28,7 +26,8 @@ const Schema = new mongoose.Schema({
     required: [true, 'Please add a password'],
     unique: true,
     trim: true,
-    maxlength: [255, 'Password can not be more then 255 characters']
+    maxlength: [255, 'Password can not be more then 255 characters'],
+    select: false
   },
   defaultImage: {
     type: String

@@ -13,6 +13,6 @@ router
 
 router
   .route('/verify')
-    .post(verify);
+    .get(verify);
 
 module.exports = router;
