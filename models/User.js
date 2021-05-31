@@ -29,16 +29,24 @@ const Schema = new mongoose.Schema({
     maxlength: [255, 'Password can not be more then 255 characters'],
     select: false
   },
-  defaultImage: {
-    type: String
+  profileImage: {
+    type: Boolean,
+    default: false
   },
-  images: [{
-    type: String
-  }],
+  admin: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
+});
+
+Schema.pre('save', function (next) {
+  this.firstName = this.firstName.charAt(0).toUpperCase() + this.firstName.slice(1).toLowerCase()
+  this.lastName = this.lastName.charAt(0).toUpperCase() + this.lastName.slice(1).toLowerCase()
+  next();
 });
 
 // The collection name for this DB is defined in the export

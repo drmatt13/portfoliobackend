@@ -41,19 +41,43 @@ body {
             {'render': true}
         ],
 
-        // card ----------------------------------------------------- >
-        [
-            //html
-            [],
-            //css
-            [],
-            //js
-            [],
-            // output
-            [],
-            //render
-            {'render': false}
-        ],
+// card ----------------------------------------------------- >
+[
+  //html
+  [],
+  //css
+[{'css': `
+
+.header {
+  https://getcssscan.com/css-box-shadow-examples
+  
+  background-image: linear-gradient(to right bottom, #fff, #fff), url(../route.jpg);
+  background-size: cover;
+  background-position: center; // top, bottom, left..
+  clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+  // https://bennettfeely.com/clippy/
+
+
+  // font-size
+  // font-weight
+  // letter-spacing
+  // text-transform: uppercase;
+  // line-height
+  
+
+  // centering with absolute
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}`}],
+  //js
+  [],
+  // output
+  [],
+  //render
+  {'render': false}
+],
 
 ];
 

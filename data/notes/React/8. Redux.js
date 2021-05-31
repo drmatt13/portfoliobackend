@@ -43,8 +43,6 @@ export default (state = initialState, action) => {
         ...state,
         background: action.payload
       }
-
-
     default:
       return state;
   }

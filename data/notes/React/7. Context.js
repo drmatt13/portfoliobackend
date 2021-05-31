@@ -10,11 +10,12 @@ const data = [
 [],
 //js
 [
-{'js': `import { createContext } from 'react';
+{'js': `// create context
+import { createContext } from 'react';
 
-const Context = createContext();
+const exampleContext = createContext();
 
-export default Context;`
+export default exampleContext;`
 }
 ],
 // output
@@ -31,53 +32,101 @@ export default Context;`
 [],
 //js
 [
-{'js': `import { useReducer, useCallback } from 'react';
+{'js': `// create initial state
+const exampleInitialState = {
+  value1: true,
+  value2: false,
+  value3: false,
+  value4: []
+};
 
-// import context
-import Context from "./Context";
+export default exampleInitialState;`
+}
+],
+// output
+[],
+//render
+{'render': false}
+],
 
-// define reducer
-const reducer = (state, action) => {
+// card ----------------------------------------------------- >
+[
+//html
+[],
+//css
+[],
+//js
+[
+{'js': `// create reducer function
+const exampleReducer = (state, action) => {
   switch (action.type) {
     case 'OPEN':
       return {
-        navOpen: true
+        ...state,
+        value1: true
+      };
+    case 'CLOSE':
+      return {
+        ...state,
+        value1: false
       };
     default:
       return state;
   }
 }
 
-const State = props => {
+export default exampleReducer;`
+}
+],
+// output
+[],
+//render
+{'render': false}
+],
 
-  const initialState = {
-    logoTransparent: false,
-    navOpen: false,
-    miniSocial: false,
-    about: false
-  };
+// card ----------------------------------------------------- >
+[
+//html
+[],
+//css
+[],
+//js
+[
+{'js': `// create context provider component 
+import { useReducer, useCallback } from 'react';
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+import exampleContext from './exampleContext';
+import exampleInitialState from './exampleInitialState';
+import exampleReducer from './exampleReducer';
 
-  const openNav = useCallback(
+const ExampleProvider = ({ children }) => {
+
+  const [state, dispatch] = useReducer(exampleReducer, exampleInitialState);
+
+  const open = useCallback(
     () => {
       dispatch({type: 'OPEN'});
-    },
-    [],
-  )
-
-  //return provider
-  return (
-    <Context.Provider value={{
-      state,
-      openNav
-    }}>
-      { props.children }
-    </Context.Provider>
+    }, []
   );
+  
+  const close = useCallback(
+    () => {
+      dispatch({type: 'CLOSE'});
+    }, []
+  );
+
+  return (
+    <exampleContext.Provider value={{
+      state,
+      open,
+      close
+    }}>
+      {children}
+    </exampleContext.Provider>
+  )
 }
 
-export default State;`
+export default ExampleProvider;`
 }
 ],
 // output
@@ -95,15 +144,15 @@ export default State;`
 [],
 //js
 [
-{'js': `// context
-import State from './context/State'
+{'js': `// use provider
+import ExampleProvider from './context/ExampleProvider'
 
 const App = () => {
 
   return (
-    <State>
+    <ExampleProvider>
       <Component />
-    </State>
+    </ExampleProvider>
   )
 }
 
@@ -127,12 +176,12 @@ export default App;`
 [
 {'js': `import { useContext } from 'react';
 
-import Context from '../../context/Context';
+import exampleContext from '../../context/exampleContext';
 
 const Component = () => {
 
-  //initialize context
-  const {state: {navOpen}} = useContext(Context);
+  // get provider value object
+  const { state: { value1, value2 }, open, close } = useContext(exampleContext);
 
   return (
     <>
@@ -146,7 +195,7 @@ export default Component;`
 ],
 // output
 [],
-//render
+//render 
 {'render': false}
 ],
 

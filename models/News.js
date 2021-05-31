@@ -8,12 +8,6 @@ const Schema = new mongoose.Schema({
     trim: true,
     length: [24, 'please make sure length of userId is 24']
   },
-  profileId: {
-    type: String,
-    required: [true, 'Please add a profileId'],
-    trim: true,
-    length: [24, 'please make sure length of userId is 24']
-  },
   postContent: {
     type: String,
     trim: true
@@ -29,4 +23,4 @@ const Schema = new mongoose.Schema({
 });
 
 // The collection name for this DB is defined in the export
-module.exports = mongoose.model('Post', Schema);
+module.exports = mongoose.model('News', Schema);

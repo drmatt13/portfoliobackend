@@ -28,8 +28,10 @@ body {
 }
 
 .container {
+  width: 190px;
   perspective: 1000px;
   margin-bottom: 30px;
+  margin: auto;
 }
 
 .seat {
@@ -104,6 +106,7 @@ body {
 
 p.text {
   margin: 5px 0;
+  text-align: center;
 }
 
 p.text span {

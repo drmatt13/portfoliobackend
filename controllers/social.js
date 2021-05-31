@@ -1,6 +1,8 @@
-const jwt = require('jsonwebtoken');
+const urlMetadata = require('url-metadata');
 const User = require('../models/User');
 const Post = require('../models/Post');
+const News = require('../models/News');
+
 
 // @desc      Get User
 // @route     GET /:id
@@ -82,17 +84,86 @@ exports.getPosts = async (req, res, next) => {
 // @access    Private
 exports.createPost = async (req, res, next) => {
 
-  const { activeUser, profileId, postContent } = req.body;
+  const { activeUser, profileId, postContent, ogMetadata } = req.body;
 
   try {
     const post = await Post.create({
       userId: activeUser._id,
       profileId,
-      postContent
+      postContent,
+      ogMetadata
     })
     if (!post) return next(new Error('post not created'));
     return res.status(200).json({ success: true, post });
   } catch (error) {
     return next(new Error('error'));
+  }
+}
+
+
+// @desc      get OG metadata
+// @route     GET /metadata
+// @access    Public
+exports.metadata = async (req, res, next) => {
+
+  const { url } = req.headers;
+  try {
+    const metadata = await urlMetadata(url);
+    if (!metadata) return next(new Error('invalid url'));
+    res.json({
+      success:true,
+      metadata: {
+        url,
+        image: metadata.image,
+        source: metadata.source,
+        title: metadata.title
+      }
+    });
+  } catch (error) {
+    return next(new Error('invalid url'));
+  }
+}
+
+
+
+
+// @desc      get News
+// @route     GET /news
+// @access    Private
+exports.getNews = async (req, res, next) => {
+
+  try {
+    const posts = await News.find()
+      .sort('-createdAt');
+    if (!posts) return next(new Error('no posts found'));
+    res.json({ success: true, posts });
+  } catch (error) {
+    return next(new Error('error'));
+  }
+
+}
+
+
+
+
+// @desc      create news
+// @route     POST /news
+// @access    Private
+exports.createNews = async (req, res, next) => {
+
+  const { activeUser, postContent, ogMetadata } = req.body;
+
+  if (!activeUser.admin) return next(new Error('Not an admin'));
+
+  try {
+    const post = await News.create({
+      userId: activeUser._id,
+      postContent,
+      ogMetadata
+    });
+    if (!post) return next(new Error('post not created'));
+    return res.status(200).json({ success: true, post });
+  } catch (error) {
+    return next(new Error('Error'));
   }
 }

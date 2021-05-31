@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const cors = require("cors");
 const colors = require('colors');
 
@@ -47,14 +47,14 @@ const auth = require("./routes/auth");
 const notes = require("./routes/notes");
 const apps = require("./routes/apps");
 const social = require("./routes/social");
-// const upload = require("./routes/upload");
+const image = require("./routes/image");
 
 // Mount routers
 app.use("/auth", TEST, auth);
 app.use("/notes", notes);
 app.use("/apps", apps);
 app.use("/social", social);
-// app.use("/api/upload", upload); 
+app.use("/image", image);
 
 app.get('/', (req, res) => {
   res.status(200).json({ success: true });
